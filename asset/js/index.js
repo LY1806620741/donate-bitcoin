@@ -1,6 +1,6 @@
 // donate-bitcoin Copyright (GPL) 2016  Nathan Robinson
 
-var address = ""; // The bitcoin address to receive donations. Change to yours
+var address = $.i18n.prop('address'); // The bitcoin address to receive donations. Change to yours
 var popup = false; // Set to true if you want a popup to pay bitcoin
 var currencyCode = "USD"; // Change to your default currency. Choose from https://blockchain.info/ticker?cors=true
 var qrcode = true; // Set to false to disable qrcode
@@ -72,7 +72,7 @@ function getBitcoinPrice(currencyExchangeResponse) {
 }
 
 function drawCurrencyButton() {
-  document.getElementById("donationbutton").src = 'https://img.shields.io/badge/donate-' + currencyCode + '-brightgreen.svg?style=flat-square';
+  document.getElementById("donationbutton").src = 'https://img.shields.io/badge/'+$.i18n.prop('label')+'-' + $.i18n.prop('unit') + '-brightgreen.svg?style=flat-square';
 }
 
 function drawDonationElements(url, donateDisplayMessage) {
@@ -98,7 +98,7 @@ function donate() {
 
 function handlePricingError(currencyExchangeResponse) {
   if (showDefaultCurrencyDisclaimer){
-    var disclaimer = `Could not find the requested currency, will be using ${defaultCurrency} instead`;
+    var disclaimer = $.i18n.prop('pricing_error_info',$.i18n.prop('unit'));
     alert(disclaimer);
   }
     currencyCode = defaultCurrency.toUpperCase();
@@ -130,11 +130,11 @@ function getFiatDonationAmount() {
 
 function composeDonationElements(bitcoinAmountToDonate, fiatDonationAmount) {
     var url = "bitcoin:" + address + "?amount=" + bitcoinAmountToDonate;
-    var fiatAmountToDonateMessage = " (" + fiatDonationAmount + " " + currencyCode + ") " + "to " + address;
-    var donateDisplayMessage = " Please send " + bitcoinAmountToDonate.toString() + " Bitcoin" + fiatAmountToDonateMessage;
+    var fiatAmountToDonateMessage = " (" + fiatDonationAmount + " " + $.i18n.prop('unit') + ") " + $.i18n.prop('to') + address;
+    var donateDisplayMessage = $.i18n.prop('donate_display_message_bitcoin',bitcoinAmountToDonate.toString(),fiatAmountToDonateMessage,$.i18n.prop('unit'));
     if (mbits == true) {
         var mbitprice = (bitcoinAmountToDonate * 1000).toFixed(2);
-        var donateDisplayMessage = " Please send " + mbitprice.toString() + " mBits" + fiatAmountToDonateMessage + " (or enter your own USD amount in the box above)";
+        var donateDisplayMessage = $.i18n.prop('donate_display_message_mbit',mbitprice.toString(),fiatAmountToDonateMessage,$.i18n.prop('unit'));
     }
     return {
         url: url,
